@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-camera-video"></i> My Meetings</h2>
+        {% if zoom_connected %}
+            <a href="{{ url_for('create_meeting') }}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Create Zoom Meeting
+            </a>
+        {% else %}
+            <button class="btn btn-secondary" disabled>
+                <i class="bi bi-lock"></i> Connect Zoom First
+            </button>
+        {% endif %}
+    </div>
+
+    {% if not zoom_connected %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            Please <a href="{{ url_for('connect_zoom') }}" class="alert-link">connect your Zoom account</a> to schedule meetings.
+        </div>
+    {% endif %}
+
+    {% if meetings %}
+        <div class="row">
+            {% for meeting in meetings %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ meeting.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ meeting.status }}</h6>
+                            <p class="mb-1"><strong>Start:</strong> {{ meeting.start_time }}</p>
+
+                            <p>
+                                <strong>Zoom Link:</strong><br>
+                                {% if meeting.status == "Upcoming" %}
+                                    <a href="{{ meeting.meeting_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-camera-video"></i> Join Zoom
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Link expired</span>
+                                {% endif %}
+                            </p>
+
+                            <p>
+                                <strong>Participants:</strong><br>
+                                {% if participants[meeting.id] %}
+                                    {{ participants[meeting.id]|join(', ') }}
+                                {% else %}
+                                    <span class="text-muted">None yet</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-flex flex-wrap justify-content-between gap-2">
+                            <a href="{{ url_for('meeting_collaboration', meeting_id=meeting.id) }}" 
+                               class="btn btn-sm btn-outline-secondary" 
+                               target="_blank">
+                                <i class="bi bi-journal-text"></i> Take Notes
+                            </a>
+                            <a href="{{ url_for('export_meeting_notes', meeting_id=meeting.id) }}" 
+                               class="btn btn-sm btn-outline-success"
+                               target="_blank">
+                                <i class="bi bi-download"></i> Export
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle-fill"></i> You have no scheduled meetings.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

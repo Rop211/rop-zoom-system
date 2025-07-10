@@ -1,0 +1,9 @@
+<form method="POST" action="{{ url_for('save_notes', meeting_id=meeting.id) }}">
+    <div class="mb-3">
+        <label for="notes">Your Notes</label>
+        <textarea name="notes" id="notes" rows="10" class="form-control">{{ notes }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Notes</button>
+</form>
+
+<a href="{{ url_for('download_notes', meeting_id=meeting.id) }}" class="btn btn-success mt-3">Download Notes</a>

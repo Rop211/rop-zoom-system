@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Admin Dashboard</h1>
+
+    <!-- Users Section -->
+    <section>
+        <h2>Users</h2>
+        {% if users %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>
+                                <a href="{{ url_for('admin.edit_user', user_id=user.id) }}">Edit</a> |
+                                <a href="{{ url_for('admin.delete_user', user_id=user.id) }}" oclick="return confirm('Are you sure?')">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No users found.</p>
+        {% endif %}
+    </section>
+
+    <hr />
+
+    <!-- Meetings Section -->
+    <section>
+        <h2>Meetings</h2>
+        {% if meetings %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Creator</th>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for meeting in meetings %}
+                        <tr>
+                            <td>{{ meeting.title }}</td>
+                            <td>{{ meeting.creator_name }}</td>
+                            <td>{{ meeting.date }}</td>
+                            <td>{{ meeting.duration }} min</td>
+                            <td>
+                                <a href="{{ url_for('admin.edit_meeting', meeting_id=meeting.id) }}">Edit</a> |
+                                <a href="{{ url_for('admin.delete_meeting', meeting_id=meeting.id) }}" onclick="return confirm('Are you sure?')">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No meetings found.</p>
+        {% endif %}
+    </section>
+
+    <hr />
+
+    <!-- Notes Section -->
+    <section>
+        <h2>Notes</h2>
+        {% if notes %}
+            <ul>
+                {% for note in notes %}
+                    <li>
+                        <strong>{{ note.meeting_title }}</strong> - {{ note.content[:50] }}...
+                        <a href="{{ url_for('admin.view_note', note_id=note.id) }}">View</a> |
+                        <a href="{{ url_for('admin.delete_note', note_id=note.id) }}" onclick="return confirm('Delete this note?')">Delete</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No notes found.</p>
+        {% endif %}
+    </section>
+
+    <hr />
+
+    <!-- Access Logs Section -->
+    <section>
+        <h2>Access Logs</h2>
+        {% if logs %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Timestamp</th>
+                        <th>IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                        <tr>
+                            <td>{{ log.user_name }}</td>
+                            <td>{{ log.action }}</td>
+                            <td>{{ log.timestamp }}</td>
+                            <td>{{ log.ip_address }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No access logs found.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

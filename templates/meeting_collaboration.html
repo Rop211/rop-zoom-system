@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h3>Meeting Collaboration</h3>
+    <p><strong>Meeting Title:</strong> {{ meeting.title }}</p>
+    <p><strong>Start Time:</strong> {{ meeting.start_time }}</p>
+
+    <div class="form-group mt-4">
+        <label for="noteArea">Your Notes:</label>
+        <textarea id="noteArea" class="form-control" rows="10" placeholder="Write your notes here..."></textarea>
+    </div>
+
+    <button id="saveBtn" class="btn btn-primary mt-2">💾 Save Notes</button>
+    <div id="statusMsg" class="mt-2"></div>
+
+    <a href="{{ url_for('export_meeting_notes', meeting_id=meeting.id) }}" class="btn btn-success mt-4">
+        📥 Download Notes (TXT)
+    </a>
+</div>
+
+<script>
+const meetingId = {{ meeting.id }};
+const noteArea = document.getElementById("noteArea");
+const saveBtn = document.getElementById("saveBtn");
+const statusMsg = document.getElementById("statusMsg");
+
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch(`/api/meeting/${meetingId}/notes`);
+        if (!res.ok) throw new Error("Unable to load notes");
+        const data = await res.json();
+        if (data.note && data.note.content) {
+            noteArea.value = data.note.content;
+        }
+    } catch (err) {
+        statusMsg.textContent = "Failed to load note.";
+        statusMsg.className = "text-danger";
+    }
+});
+
+saveBtn.addEventListener("click", async () => {
+    const content = noteArea.value.trim();
+    if (!content) {
+        statusMsg.textContent = "Note cannot be empty.";
+        statusMsg.className = "text-warning";
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/meeting/${meetingId}/notes`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ content })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+            statusMsg.textContent = "Notes saved!";
+            statusMsg.className = "text-success";
+        } else {
+            throw new Error(data.error || "Unknown error");
+        }
+    } catch (err) {
+        statusMsg.textContent = "Failed to save notes.";
+        statusMsg.className = "text-danger";
+    }
+});
+</script>
+{% endblock %}

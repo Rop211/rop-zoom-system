@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 14px; }
+        h2 { text-align: center; }
+        .note { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Meeting Notes for "{{ meeting.title }}"</h2>
+    {% for note in notes %}
+        <div class="note">
+            <strong>{{ note.username }}</strong> ({{ note.created_at }}):
+            <p>{{ note.content }}</p>
+        </div>
+    {% endfor %}
+</body>
+</html>

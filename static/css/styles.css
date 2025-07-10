@@ -1,0 +1,19 @@
+body {
+    padding-top: 56px;
+}
+.meeting-card {
+    transition: transform 0.2s;
+}
+.meeting-card:hover {
+    transform: scale(1.02);
+}
+.note-card {
+    border-left: 4px solid #0d6efd;
+}
+/* Back button fixed position */
+#back-button {
+    position: fixed;
+    top: 70px; /* below navbar */
+    left: 20px;
+    z-index: 1050;
+}

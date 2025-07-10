@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="mb-4">API Documentation</h1>
+
+  <section>
+    <h2>Authentication</h2>
+    <h3>POST /api/login</h3>
+    <p>Authenticate user and receive a JWT token.</p>
+    <strong>Request Body:</strong>
+    <pre>{
+  "username": "string",
+  "password": "string"
+}</pre>
+    <strong>Response:</strong>
+    <pre>{
+  "access_token": "jwt_token_here",
+  "expires_in": 3600
+}</pre>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2>Users</h2>
+
+    <h3>GET /api/users</h3>
+    <p>Retrieve a list of users (admin only).</p>
+    <strong>Headers:</strong> Authorization: Bearer &lt;JWT&gt;
+    <br/>
+    <strong>Response:</strong>
+    <pre>[
+  {
+    "id": 1,
+    "username": "john_doe",
+    "email": "john@example.com",
+    "role": "admin"
+  },
+  ...
+]</pre>
+
+    <h3>GET /api/users/&lt;id&gt;</h3>
+    <p>Get user details by ID.</p>
+    <strong>Headers:</strong> Authorization: Bearer &lt;JWT&gt;
+    <br/>
+    <strong>Response:</strong>
+    <pre>{
+  "id": 1,
+  "username": "john_doe",
+  "email": "john@example.com",
+  "role": "admin"
+}</pre>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2>Meetings</h2>
+
+    <h3>GET /api/meetings</h3>
+    <p>Get a list of meetings. Supports query parameters for filtering.</p>
+    <strong>Headers:</strong> Authorization: Bearer &lt;JWT&gt;
+    <br/>
+    <strong>Query Params:</strong> <code>?upcoming=true</code> or <code>?past=true</code> (optional)
+    <br/>
+    <strong>Response:</strong>
+    <pre>[
+  {
+    "id": 101,
+    "title": "Weekly Sync",
+    "description": "Team sync-up meeting",
+    "start_time": "2025-06-01T10:00:00Z",
+    "end_time": "2025-06-01T11:00:00Z",
+    "creator_id": 1,
+    "zoom_meeting_id": "123456789",
+    "meeting_link": "https://zoom.us/j/123456789"
+  },
+  ...
+]</pre>
+
+    <h3>POST /api/meetings</h3>
+    <p>Create a new meeting.</p>
+    <strong>Headers:</strong> Authorization: Bearer &lt;JWT&gt;
+    <br/>
+    <strong>Request Body:</strong>
+    <pre>{
+  "title": "string",
+  "description": "string",
+  "start_time": "ISO 8601 timestamp",
+  "end_time": "ISO 8601 timestamp"
+}</pre>
+    <strong>Response:</strong>
+    <pre>{
+  "id": 102,
+  "message": "Meeting created successfully."
+}</pre>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2>Notes</h2>
+
+    <h3>GET /api/meetings/&lt;meeting_id&gt;/notes</h3>
+    <p>Retrieve notes for a specific meeting.</p>
+    <strong>Headers:</strong> Authorization: Bearer &lt;JWT&gt;
+    <br/>
+    <strong>Response:</strong>
+    <pre>[
+  {
+    "user_id": 2,
+    "username": "jane_doe",
+    "content": "Notes content here",
+    "created_at": "2025-05-27T12:00:00Z"
+  },
+  ...
+]</pre>
+
+    <h3>POST /api/meetings/&lt;meeting_id&gt;/notes</h3>
+    <p>Add or update notes for a meeting.</p>
+    <strong>Headers:</strong> Authorization: Bearer &lt;JWT&gt;
+    <br/>
+    <strong>Request Body:</strong>
+    <pre>{
+  "content": "string"
+}</pre>
+    <strong>Response:</strong>
+    <pre>{
+  "message": "Notes saved successfully."
+}</pre>
+  </section>
+
+</div>
+{% endblock %}

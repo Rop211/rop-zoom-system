@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <h1 class="display-4 mb-4">Welcome to Meeting Notes</h1>
+        <p class="lead mb-4">Schedule meetings, collaborate with participants, and share notes all in one place.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-4 gap-3">Register</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg px-4">Login</a>
+            <a href="/all_meetings">View All Meetings</a>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

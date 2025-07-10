@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Meeting Details - {{ meeting.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ meeting.title }}</h1>
+    <p><strong>Description:</strong> {{ meeting.description }}</p>
+    <p><strong>Date & Time:</strong> {{ meeting.date }} at {{ meeting.time }}</p>
+    <p><strong>Duration:</strong> {{ meeting.duration }} minutes</p>
+    <p><strong>Created by:</strong> {{ meeting.creator_name }} ({{ meeting.creator_email }})</p>
+
+    {% if meeting.zoom_recording_url %}
+        <p>
+            <strong>Zoom Recording:</strong>
+            <a href="{{ meeting.zoom_recording_url }}" target="_blank">Watch Recording</a>
+        </p>
+    {% endif %}
+
+    <hr />
+
+    <!-- Attendance -->
+    <section>
+        <h2>Attendance</h2>
+        {% if attendance %}
+            <ul>
+                {% for attendee in attendance %}
+                    <li>{{ attendee.name }} ({{ attendee.email }})</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No attendees recorded.</p>
+        {% endif %}
+    </section>
+
+    <hr />
+
+    <!-- Meeting Notes -->
+    <section>
+        <h2>Notes</h2>
+        {% if notes %}
+            <ul>
+                {% for note in notes %}
+                    <li>
+                        <strong>{{ note.author_name }}:</strong> {{ note.content }} 
+                        {% if note.attachment_url %}
+                            <br /><a href="{{ note.attachment_url }}" target="_blank">Attachment</a>
+                        {% endif %}
+                        <br /><small>Added on {{ note.created_at }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No notes available.</p>
+        {% endif %}
+    </section>
+
+    <!-- Optional: Add note form can be added here -->
+
+    <a href="{{ url_for('meetings.list') }}">Back to Meetings List</a>
+</div>
+{% endblock %}
+
